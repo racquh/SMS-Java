@@ -16,8 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -31,6 +29,10 @@ public class Update_User extends javax.swing.JFrame {
     Connection conn = null;
     ResultSet rs = null;
     PreparedStatement ps = null;
+    
+    int mousepX;
+    int mousepY;
+    
     /**
      * Creates new form Update_User
      */
@@ -90,9 +92,20 @@ public class Update_User extends javax.swing.JFrame {
         txtpassword = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel3MouseDragged(evt);
+            }
+        });
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel3MousePressed(evt);
+            }
+        });
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_school_house_30px.png"))); // NOI18N
 
@@ -169,7 +182,8 @@ public class Update_User extends javax.swing.JFrame {
         jLabel6.setText("Picture");
 
         btnUpdate.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        btnUpdate.setText("Update");
+        btnUpdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_edit_user_male_25px.png"))); // NOI18N
+        btnUpdate.setText("  Update");
         btnUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateActionPerformed(evt);
@@ -264,6 +278,7 @@ public class Update_User extends javax.swing.JFrame {
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 510, 390));
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     //Back button
@@ -302,9 +317,30 @@ public class Update_User extends javax.swing.JFrame {
         catch (FileNotFoundException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
+        finally{
+            try{
+                rs.close();
+                ps.close();
+            }
+            catch(SQLException exc){
+               JOptionPane.showMessageDialog(null,exc.getMessage());
+            }
+        }
         
         
     }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        mousepX = evt.getX();
+        mousepY = evt.getY();
+    }//GEN-LAST:event_jPanel3MousePressed
+
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
+        int cordinateX = evt.getXOnScreen();
+        int cordinateY = evt.getYOnScreen();
+        
+        this.setLocation(cordinateX-mousepX,cordinateY-mousepY);
+    }//GEN-LAST:event_jPanel3MouseDragged
 
     /**
      * @param args the command line arguments

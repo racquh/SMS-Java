@@ -29,6 +29,8 @@ public class MainS extends javax.swing.JFrame {
     PreparedStatement ps = null;
     
     String Uname = GetDetails.Username;
+    int mousepX;
+    int mousepY;
     /**
      * Creates new form Employee
      */
@@ -54,7 +56,7 @@ public class MainS extends javax.swing.JFrame {
             while(rs.next()){
                 String name = rs.getString("Username");
                 lblUserName.setText(name);
-                String U_Type = rs.getString("AccessType");
+                String U_Type = rs.getString("Accesstype");
                 lblUserType.setText(U_Type);
                 
                 byte[] pic = rs.getBytes("Picture");
@@ -82,12 +84,12 @@ public class MainS extends javax.swing.JFrame {
     //get number of admin
     private void getAdmCount(){
         try{
-        String sql = "select count(AccessType) from employees where AccessType = 'Admin' ";
+        String sql = "select count(Accesstype) from users where Accesstype = 'Admin' ";
         ps = conn.prepareStatement(sql);
         rs = ps.executeQuery();
         
         if(rs.next()){
-            String admin = rs.getString("count(AccessType)");
+            String admin = rs.getString("count(Accesstype)");
             lblAdminCount.setText(admin);
         }
             
@@ -95,24 +97,42 @@ public class MainS extends javax.swing.JFrame {
         catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
+        finally{
+            try{
+                rs.close();
+                ps.close();
+            }
+            catch(SQLException exc){
+               JOptionPane.showMessageDialog(null,exc.getMessage());
+            }
+        }
     }
 
     
     //get number of users
     private void getUsCount(){
         try{
-        String sql = "select count(AccessType) from users";
+        String sql = "select count(Accesstype) from users";
         ps = conn.prepareStatement(sql);
         rs = ps.executeQuery();
         
         if(rs.next()){
-            String user = rs.getString("count(AccessType)");
+            String user = rs.getString("count(Accesstype)");
             lblUsersCount.setText(user);
         }
             
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        finally{
+            try{
+                rs.close();
+                ps.close();
+            }
+            catch(SQLException exc){
+               JOptionPane.showMessageDialog(null,exc.getMessage());
+            }
         }
     }
     
@@ -132,6 +152,16 @@ public class MainS extends javax.swing.JFrame {
         catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
+        finally{
+            try{
+                rs.close();
+                ps.close();
+            }
+            catch(SQLException exc){
+               JOptionPane.showMessageDialog(null,exc.getMessage());
+            }
+        }
+        
     }
     
     //get number of students
@@ -149,6 +179,15 @@ public class MainS extends javax.swing.JFrame {
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+        finally{
+            try{
+                rs.close();
+                ps.close();
+            }
+            catch(SQLException exc){
+               JOptionPane.showMessageDialog(null,exc.getMessage());
+            }
         }
     }
     
@@ -180,6 +219,9 @@ public class MainS extends javax.swing.JFrame {
                lblCurrentTime.setText(hour + ":" + minute + ":" + second);
             }
         }
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -238,6 +280,7 @@ public class MainS extends javax.swing.JFrame {
         lblUserName = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        lblClose = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         lblLogo = new javax.swing.JLabel();
@@ -731,55 +774,53 @@ public class MainS extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(1, 29, 62));
 
         jPanel1.setBackground(new java.awt.Color(1, 29, 62));
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel1MouseDragged(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_lock_25px.png"))); // NOI18N
         btnLogout.setText("Logout");
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogoutActionPerformed(evt);
             }
         });
+        jPanel1.add(btnLogout, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 0, -1, 30));
 
-        lblUserType.setForeground(new java.awt.Color(0, 153, 0));
+        lblUserType.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblUserType.setForeground(new java.awt.Color(255, 102, 0));
         lblUserType.setText("Admin");
+        jPanel1.add(lblUserType, new org.netbeans.lib.awtextra.AbsoluteConstraints(649, 9, -1, -1));
 
-        lblUserName.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        lblUserName.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblUserName.setForeground(new java.awt.Color(255, 255, 255));
         lblUserName.setText("Raphael :");
+        jPanel1.add(lblUserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(593, 7, -1, -1));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("School manager Pro");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(43, 3, -1, 23));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_school_house_25px.png"))); // NOI18N
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 30, 30));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 571, Short.MAX_VALUE)
-                .addComponent(lblUserName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblUserType)
-                .addGap(27, 27, 27)
-                .addComponent(btnLogout)
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnLogout)
-                        .addComponent(lblUserType)
-                        .addComponent(lblUserName)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(2, 2, 2))
-        );
+        lblClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_close_window_25px.png"))); // NOI18N
+        lblClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblClose.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                lblCloseMousePressed(evt);
+            }
+        });
+        jPanel1.add(lblClose, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 0, -1, 30));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -833,12 +874,13 @@ public class MainS extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel37))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addComponent(lblTeachersCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel37, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblTeachersCount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -1015,33 +1057,56 @@ public class MainS extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnHomeMouseClicked
 
+    //btn Register
     private void btnRegisterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnRegisterMouseClicked
         // TODO add your handling code here:
         new Register().setVisible(true);
         this.hide();
     }//GEN-LAST:event_btnRegisterMouseClicked
 
+    //btn Logout
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         new Login().setVisible(true);
         this.hide();
     }//GEN-LAST:event_btnLogoutActionPerformed
 
+    //btn Student info
     private void btnStdInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStdInfoMouseClicked
         // TODO add your handling code here:
         new Students_Info().setVisible(true);
         this.hide();
     }//GEN-LAST:event_btnStdInfoMouseClicked
 
+    // btn Emp Info
     private void btnEmpInfoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEmpInfoMouseClicked
         // TODO add your handling code here:
         new Employee_Info().setVisible(true);
         this.hide();
     }//GEN-LAST:event_btnEmpInfoMouseClicked
 
+    //btn Users
     private void btnUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUsersMouseClicked
         new Users().setVisible(true);
         this.hide();
     }//GEN-LAST:event_btnUsersMouseClicked
+
+    //title bar dragged
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        int cordinateX = evt.getXOnScreen();
+        int cordinateY = evt.getYOnScreen();
+        
+        this.setLocation(cordinateX-mousepX,cordinateY-mousepY);
+    }//GEN-LAST:event_jPanel1MouseDragged
+
+    //title bar pressed
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        mousepX = evt.getX();
+        mousepY = evt.getY();
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void lblCloseMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblCloseMousePressed
+        System.exit(0);
+    }//GEN-LAST:event_lblCloseMousePressed
 
     /**
      * @param args the command line arguments
@@ -1143,6 +1208,7 @@ public class MainS extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel9;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblAdminCount;
+    private javax.swing.JLabel lblClose;
     private javax.swing.JLabel lblCurrentDate;
     private javax.swing.JLabel lblCurrentTime;
     private javax.swing.JLabel lblLogo;

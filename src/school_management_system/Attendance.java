@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
@@ -28,6 +30,14 @@ public class Attendance extends javax.swing.JFrame {
     Connection conn = null;
     ResultSet rs = null;
     PreparedStatement ps = null;
+    
+    int mousepX;
+    int mousepY;
+    
+    String getAttendance;
+    
+    private TableModel model;
+    
     /**
      * Creates new form Attendance
      */
@@ -48,7 +58,7 @@ public class Attendance extends javax.swing.JFrame {
         
         private final Map<Integer, Boolean> checkBoxes = new HashMap<>();
 
-        private TableModel model;
+        public TableModel model;
         private String columnName;
 
         public CheckBoxWrapperTableModel(TableModel model, String columnName)
@@ -115,6 +125,30 @@ public class Attendance extends javax.swing.JFrame {
         }
     }
     
+    
+    // getting value from checkbox
+
+public class CheckBoxModelListener implements TableModelListener {
+
+        public void tableChanged(TableModelEvent e) {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            if (column == e.getColumn()) {
+                TableModel model = (TableModel) e.getSource();
+                String columnName = model.getColumnName(column);
+                Boolean checked = (Boolean) model.getValueAt(row, column);
+                if (checked) {
+                    getAttendance = "Absent";
+                    System.out.println(getAttendance);
+                } else {
+                    getAttendance = "Present";
+                    System.out.println(getAttendance);
+                }
+            }
+        }
+    }
+
+
     // Update table
    private void Update_Table(){
         try{
@@ -126,6 +160,7 @@ public class Attendance extends javax.swing.JFrame {
             TableModel utilsModel = DbUtils.resultSetToTableModel(rs);
             TableModel wrapperModel = new CheckBoxWrapperTableModel(utilsModel, "Absent");
             STable.setModel(wrapperModel);
+            STable.getModel().addTableModelListener(new CheckBoxModelListener());
             
             
         } catch (SQLException ex) {
@@ -164,6 +199,7 @@ public class Attendance extends javax.swing.JFrame {
         cboClass = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
         STable = new javax.swing.JTable();
+        btnSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setUndecorated(true);
@@ -183,6 +219,16 @@ public class Attendance extends javax.swing.JFrame {
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 30, 940, 100));
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel3MouseDragged(evt);
+            }
+        });
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel3MousePressed(evt);
+            }
+        });
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_school_house_30px.png"))); // NOI18N
 
@@ -246,15 +292,21 @@ public class Attendance extends javax.swing.JFrame {
         jScrollPane2.setViewportView(STable);
         STable.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_save_close_25px.png"))); // NOI18N
+        btnSave.setText("Save");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(79, 79, 79)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(cboClass, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2)
-                    .addComponent(cboClass, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 780, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(81, Short.MAX_VALUE))
         );
@@ -266,8 +318,10 @@ public class Attendance extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cboClass, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 427, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(48, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 130, 940, 570));
@@ -289,6 +343,18 @@ public class Attendance extends javax.swing.JFrame {
         
         Update_Table();
     }//GEN-LAST:event_cboClassPopupMenuWillBecomeInvisible
+
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
+        int cordinateX = evt.getXOnScreen();
+        int cordinateY = evt.getYOnScreen();
+        
+        this.setLocation(cordinateX-mousepX,cordinateY-mousepY);
+    }//GEN-LAST:event_jPanel3MouseDragged
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        mousepX = evt.getX();
+        mousepY = evt.getY();
+    }//GEN-LAST:event_jPanel3MousePressed
 
     /**
      * @param args the command line arguments
@@ -321,12 +387,14 @@ public class Attendance extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Attendance().setVisible(true);
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable STable;
+    private javax.swing.JButton btnSave;
     private javax.swing.JLabel btnback;
     private javax.swing.JComboBox cboClass;
     private javax.swing.JLabel jLabel1;

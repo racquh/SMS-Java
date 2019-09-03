@@ -21,6 +21,9 @@ public class Users extends javax.swing.JFrame {
         initComponents();
     }
 
+    int mousepX;
+    int mousepY;
+    
     //CLOSE FORM
     public void close(){
         WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
@@ -52,6 +55,16 @@ public class Users extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel3MouseDragged(evt);
+            }
+        });
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel3MousePressed(evt);
+            }
+        });
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_school_house_30px.png"))); // NOI18N
 
@@ -121,8 +134,8 @@ public class Users extends javax.swing.JFrame {
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
-        btnAllusers.setBackground(new java.awt.Color(51, 51, 255));
         btnAllusers.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAllusers.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_show_property_25px.png"))); // NOI18N
         btnAllusers.setText("Show All Users");
         btnAllusers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -130,8 +143,8 @@ public class Users extends javax.swing.JFrame {
             }
         });
 
-        btnAddUser.setBackground(new java.awt.Color(0, 255, 102));
         btnAddUser.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnAddUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_add_25px.png"))); // NOI18N
         btnAddUser.setText("Add New User");
         btnAddUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,6 +216,18 @@ public class Users extends javax.swing.JFrame {
         new All_Users().setVisible(true);
         close();
     }//GEN-LAST:event_btnAllusersActionPerformed
+
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
+        int cordinateX = evt.getXOnScreen();
+        int cordinateY = evt.getYOnScreen();
+        
+        this.setLocation(cordinateX-mousepX,cordinateY-mousepY);
+    }//GEN-LAST:event_jPanel3MouseDragged
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        mousepX = evt.getX();
+        mousepY = evt.getY();
+    }//GEN-LAST:event_jPanel3MousePressed
 
     /**
      * @param args the command line arguments

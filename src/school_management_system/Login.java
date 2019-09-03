@@ -73,6 +73,7 @@ public class Login extends javax.swing.JFrame {
 
         btnLogin.setBackground(new java.awt.Color(0, 153, 0));
         btnLogin.setFont(new java.awt.Font("Yu Gothic UI", 1, 14)); // NOI18N
+        btnLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_unlock_25px.png"))); // NOI18N
         btnLogin.setText("LOGIN");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,7 +205,7 @@ public class Login extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         // TODO add your handling code here:
         GetDetails.Username = txtUsername.getText();
-        String sql= "SELECT * FROM employees WHERE Username=? and Pasword=?";
+        String sql= "SELECT * FROM users WHERE Username=? and Password=?";
         try{
             ps = conn.prepareStatement(sql);
             ps.setString(1, txtUsername.getText());
@@ -241,6 +242,15 @@ public class Login extends javax.swing.JFrame {
         }
         catch(SQLException e){
             JOptionPane.showMessageDialog(null,e.getMessage());
+        }
+        finally{
+            try{
+                rs.close();
+                ps.close();
+            }
+            catch(SQLException exc){
+               JOptionPane.showMessageDialog(null,exc.getMessage());
+            }
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

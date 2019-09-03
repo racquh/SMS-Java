@@ -5,6 +5,8 @@
  */
 package school_management_system;
 
+import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +25,10 @@ public class Students_Info extends javax.swing.JFrame {
     ResultSet rs = null;
     PreparedStatement ps = null;
     
+    int mousepX;
+    int mousepY;
+    
+    
     /**
      * Creates new form Students_Info
      */
@@ -30,6 +36,12 @@ public class Students_Info extends javax.swing.JFrame {
         initComponents();
         conn = MyConnection.Connect();
         Update_Table();
+    }
+    
+    //CLOSE FORM
+    public void close(){
+        WindowEvent winClosingEvent = new WindowEvent(this,WindowEvent.WINDOW_CLOSING);
+         Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(winClosingEvent);
     }
 
      //Update table
@@ -51,8 +63,7 @@ public class Students_Info extends javax.swing.JFrame {
             }
             catch(SQLException ex){
                JOptionPane.showMessageDialog(null,ex.getMessage());
-            }
-            
+            }   
         }
     
     }
@@ -118,6 +129,16 @@ public class Students_Info extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel3MouseDragged(evt);
+            }
+        });
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel3MousePressed(evt);
+            }
+        });
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_school_house_30px.png"))); // NOI18N
 
@@ -465,8 +486,20 @@ public class Students_Info extends javax.swing.JFrame {
     private void btnbackMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnbackMouseClicked
         // TODO add your handling code here:
         new Register().setVisible(true);
-        this.hide();
+        close();
     }//GEN-LAST:event_btnbackMouseClicked
+
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
+        int cordinateX = evt.getXOnScreen();
+        int cordinateY = evt.getYOnScreen();
+        
+        this.setLocation(cordinateX-mousepX,cordinateY-mousepY);
+    }//GEN-LAST:event_jPanel3MouseDragged
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        mousepX = evt.getX();
+        mousepY = evt.getY();
+    }//GEN-LAST:event_jPanel3MousePressed
 
     /**
      * @param args the command line arguments

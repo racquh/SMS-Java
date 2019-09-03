@@ -16,8 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -33,6 +31,11 @@ public class NewUser extends javax.swing.JFrame {
     Connection conn = null;
     ResultSet rs = null;
     PreparedStatement ps = null;
+    
+    int mousepX;
+    int mousepY;
+   
+    
     /**
      * Creates new form NewUser
      */
@@ -42,6 +45,7 @@ public class NewUser extends javax.swing.JFrame {
         FillCombo();
     }
 
+    
     //resize image
     private ImageIcon ResizeImage(String ImagePath, byte[] pic){
         
@@ -136,6 +140,16 @@ public class NewUser extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel3MouseDragged(evt);
+            }
+        });
+        jPanel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel3MousePressed(evt);
+            }
+        });
 
         jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_school_house_30px.png"))); // NOI18N
 
@@ -281,15 +295,15 @@ public class NewUser extends javax.swing.JFrame {
                     .addComponent(cboSelect, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cboAccessType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtUsername)
+                    .addComponent(txtCPassword)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel4)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel2))
-                        .addGap(0, 170, Short.MAX_VALUE))
-                    .addComponent(txtCPassword)
-                    .addComponent(jLabel6))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel6))
+                        .addGap(0, 143, Short.MAX_VALUE)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(79, 79, 79)
@@ -397,6 +411,15 @@ public class NewUser extends javax.swing.JFrame {
             catch(SQLException e){
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }
+            finally{
+                try{
+                    rs.close();
+                    ps.close();
+                }
+                catch(SQLException exc){
+                   JOptionPane.showMessageDialog(null,exc.getMessage());
+                }
+            }
         }else
             JOptionPane.showMessageDialog(null,"Password does not match");
         
@@ -463,6 +486,18 @@ public class NewUser extends javax.swing.JFrame {
             imgPath = path;
         }
     }//GEN-LAST:event_btnPhotoActionPerformed
+
+    private void jPanel3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MousePressed
+        mousepX = evt.getX();
+        mousepY = evt.getY();
+    }//GEN-LAST:event_jPanel3MousePressed
+
+    private void jPanel3MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel3MouseDragged
+        int cordinateX = evt.getXOnScreen();
+        int cordinateY = evt.getYOnScreen();
+        
+        this.setLocation(cordinateX-mousepX,cordinateY-mousepY);
+    }//GEN-LAST:event_jPanel3MouseDragged
 
     /**
      * @param args the command line arguments
