@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -152,7 +154,7 @@ public class CheckBoxModelListener implements TableModelListener {
     // Update table
    private void Update_Table(){
         try{
-            String sql ="select Std_Card_Id as 'Student ID', Std_No as 'Student NO.', Firstname, Lastname, Address, Gender from students where Class ='"+getClass+"'";
+            String sql ="select Std_Card_Id as 'Student ID', Firstname, Lastname, Gender, Class from students where Class ='"+getClass+"'";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             
@@ -294,6 +296,11 @@ public class CheckBoxModelListener implements TableModelListener {
 
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/school_management_system/Images/icons8_save_close_25px.png"))); // NOI18N
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -355,6 +362,45 @@ public class CheckBoxModelListener implements TableModelListener {
         mousepX = evt.getX();
         mousepY = evt.getY();
     }//GEN-LAST:event_jPanel3MousePressed
+
+    //save button
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        try{
+            int rows = STable.getRowCount();
+
+            for(int row = 0; row<rows; row++)
+            {   
+                String  Attendance= (String)STable.getValueAt(row, 0).toString();
+                String Std_Card_Id = (String) STable.getValueAt(row, 1);
+                String Fname = (String)STable.getValueAt(row, 2);
+                String Lname = (String)STable.getValueAt(row, 3);
+                String Gender = (String)STable.getValueAt(row, 4);
+                String Class = (String)STable.getValueAt(row, 5);
+                
+                if(Attendance.trim().contains("true")){
+                    Attendance = "Absent";
+                }
+                else{
+                    Attendance = "Present";
+                }
+                String sql = "Insert into attendance(Std_Card_Id, Attendance, Firstname, Lastname, Gender, Class) values ('"+Std_Card_Id+"','"+Attendance+"','"+Fname+"','"+Lname+"','"+Gender+"','"+Class+"')";
+
+                ps = conn.prepareStatement(sql);
+                ps.execute();     
+            }
+            JOptionPane.showMessageDialog(null, "You have successfully marked the Attendance for today!!");
+            }
+        catch(Exception e){
+            JOptionPane.showMessageDialog(this,e.getMessage());
+        }
+        finally{
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Attendance.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnSaveActionPerformed
 
     /**
      * @param args the command line arguments
